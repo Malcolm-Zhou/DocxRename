@@ -21,8 +21,8 @@ public class Main {
             String fullFileName = f.getName();
             String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));
             String fullPath = folder.getAbsolutePath() + "//" + fullFileName;
-            if (fullFileName.contains("doc")) {
-                if (fullFileName.contains("docx")) {
+            if (fullFileName.contains(".doc")) {
+                if (fullFileName.endsWith(".docx")) {
                     XWPFWordExtractor extractor = null;
                     try {
                         extractor = new XWPFWordExtractor(POIXMLDocument.openPackage(fullPath));
@@ -45,7 +45,7 @@ public class Main {
                         File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + "//" + fullFileName.replace(fileName, title));
                         f.renameTo(toFileCopy);
                     }
-                } else {
+                } else if (fullFileName.endsWith(".doc")) {
                     try {
                         InputStream is = new FileInputStream(new File(fullPath));
                         WordExtractor extractor = new WordExtractor(is);
