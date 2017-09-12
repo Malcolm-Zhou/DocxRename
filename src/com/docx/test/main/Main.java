@@ -1,5 +1,6 @@
 package com.docx.test.main;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
@@ -12,7 +13,7 @@ import java.io.*;
  * @author Malcolm on 12/09/2017.
  */
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         File folder = new File("files");
         String[] files = folder.list();
 
@@ -20,7 +21,8 @@ public class Main {
             File f = new File(folder, file);
             String fullFileName = f.getName();
             String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));
-            String fullPath = folder.getAbsolutePath() + "//" + fullFileName;
+            String fullPath = folder.getAbsolutePath() + "\\" + fullFileName;
+            System.out.println(fullPath);
             if (fullFileName.contains(".doc")) {
                 if (fullFileName.endsWith(".docx")) {
                     XWPFWordExtractor extractor = null;
@@ -37,13 +39,15 @@ public class Main {
                     String title = (text.split("\n"))[0];
                     System.out.println(title);
 
-                    File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + "//" + fullFileName.replace(fileName, title));
+
+                    File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
+                    System.out.println(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
                     if (!toFile.exists()) {
-                        f.renameTo(toFile);
+                        FileUtils.copyFile(f,toFile);
                     } else {
                         title = title + " copy";
-                        File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + "//" + fullFileName.replace(fileName, title));
-                        f.renameTo(toFileCopy);
+                        File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
+                        FileUtils.copyFile(f,toFileCopy);
                     }
                 } else if (fullFileName.endsWith(".doc")) {
                     try {
@@ -53,13 +57,14 @@ public class Main {
                         String title = (text.split("\n"))[0];
                         System.out.println(title);
 
-                        File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + "//" + fullFileName.replace(fileName, title));
+                        File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
+                        System.out.println(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
                         if (!toFile.exists()) {
-                            f.renameTo(toFile);
+                            FileUtils.copyFile(f,toFile);
                         } else {
                             title = title + " copy";
-                            File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + "//" + fullFileName.replace(fileName, title));
-                            f.renameTo(toFileCopy);
+                            File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
+                            FileUtils.copyFile(f,toFileCopy);
                         }
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
