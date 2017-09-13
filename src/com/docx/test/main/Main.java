@@ -17,12 +17,15 @@ public class Main {
         File folder = new File("files");
         String[] files = folder.list();
 
+        String slash = "\\";
+        //  Mac use "/"
+        //  Windows use "\\"
+
         for (String file : files) {
             File f = new File(folder, file);
             String fullFileName = f.getName();
             String fileName = fullFileName.substring(0, fullFileName.lastIndexOf("."));
-            String fullPath = folder.getAbsolutePath() + "\\" + fullFileName;
-            System.out.println(fullPath);
+            String fullPath = folder.getAbsolutePath() + slash + fullFileName;
             if (fullFileName.contains(".doc")) {
                 if (fullFileName.endsWith(".docx")) {
                     XWPFWordExtractor extractor = null;
@@ -37,17 +40,24 @@ public class Main {
                     }
                     String text = extractor.getText();
                     String title = (text.split("\n"))[0];
-                    System.out.println(title);
 
 
-                    File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
-                    System.out.println(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
+                    File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + slash + fullFileName.replace(fileName, title));
                     if (!toFile.exists()) {
-                        FileUtils.copyFile(f,toFile);
+                        FileUtils.copyFile(f, toFile);
                     } else {
-                        title = title + " copy";
-                        File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
-                        FileUtils.copyFile(f,toFileCopy);
+                        File renamedFolder = new File("renamed");
+                        String[] renameds = renamedFolder.list();
+                        Integer copyCount = 0;
+                        for (String renamed : renameds) {
+                            System.out.println(renamed);
+                            if (renamed.contains(title)) {
+                                copyCount++;
+                            }
+                        }
+                        title = title + " (" + copyCount + ")";
+                        File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + slash + fullFileName.replace(fileName, title));
+                        FileUtils.copyFile(f, toFileCopy);
                     }
                 } else if (fullFileName.endsWith(".doc")) {
                     try {
@@ -57,14 +67,23 @@ public class Main {
                         String title = (text.split("\n"))[0];
                         System.out.println(title);
 
-                        File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
-                        System.out.println(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
+                        File toFile = new File(folder.getAbsolutePath().replace("files", "renamed") + slash + fullFileName.replace(fileName, title));
                         if (!toFile.exists()) {
-                            FileUtils.copyFile(f,toFile);
+                            FileUtils.copyFile(f, toFile);
                         } else {
-                            title = title + " copy";
-                            File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + "\\" + fullFileName.replace(fileName, title));
-                            FileUtils.copyFile(f,toFileCopy);
+                            File renamedFolder = new File("renamed");
+                            String[] renameds = renamedFolder.list();
+                            Integer copyCount = 0;
+                            for (String renamed : renameds) {
+                                System.out.println(renamed);
+                                if (renamed.contains(title)) {
+                                    copyCount++;
+                                }
+                            }
+                            title = title + " (" + copyCount + ")";
+                            File toFileCopy = new File(folder.getAbsolutePath().replace("files", "renamed") + slash + fullFileName.replace(fileName, title));
+                            System.out.println("Copy");
+                            FileUtils.copyFile(f, toFileCopy);
                         }
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
